@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MYCELIUM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ══ SCREEN: RULES ══════════════════════════════════════════════════ -->
+<div id="screen-rules" class="screen active">
+  <header class="logo-block">
+    <div class="logo">MYCELIUM</div>
+    <div class="logo-sub">A Strategy Game of Fungal World Domination</div>
+  </header>
+
+  <div class="rules-body">
+    <div class="rules-col">
+      <section class="rule-section">
+        <h2>The Premise</h2>
+        <p>Fungi are the largest, oldest, and most adaptive kingdom of life on Earth. <em>Mycelium</em> asks: what if the most successful kingdom decided humanity was its next evolutionary opportunity?</p>
+        <p>Each player commands a unique fungal species — real organisms with real capabilities — competing to achieve global dominance through expansion, mutation, and biological warfare.</p>
+      </section>
+
+      <section class="rule-section">
+        <h2>Turn Structure</h2>
+        <ol class="rule-list">
+          <li><strong>Environment Draw</strong> — An Environmental Card shifts global conditions.</li>
+          <li><strong>Growth</strong> — Collect resources from every hex you control.</li>
+          <li><strong>Action Phase</strong> — Take 3 actions: expand, draw cards, discard, scavenge.</li>
+          <li><strong>Reckoning</strong> — Human responses escalate as the fungal threat grows.</li>
+        </ol>
+      </section>
+
+      <section class="rule-section">
+        <h2>Resources</h2>
+        <div class="resource-explainer">
+          <div class="res-item"><span class="res-badge biomass-badge">B</span><div><strong>Biomass</strong><br/>Spend 2 to expand your mycelium into an adjacent hex. Collected per owned hex each round.</div></div>
+          <div class="res-item"><span class="res-badge spores-badge">S</span><div><strong>Spores</strong><br/>Used for long-range dispersal and human infection actions.</div></div>
+          <div class="res-item"><span class="res-badge mp-badge">MP</span><div><strong>Mutation Points</strong><br/>Spend 2 to draw a mutation card. Spend 1 to scavenge from the Spore Drift Pool.</div></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="rules-col">
+      <section class="rule-section">
+        <h2>The Hex Map</h2>
+        <p>The world is a 19-region hexagonal grid with 8 terrain types — Alpine, Boreal Forest, Tropical Forest, Temperate Forest, Grassland, Desert, Urban, and Coastal. Each species has a home terrain where they receive a resource bonus. Click adjacent hexes on your turn to expand (costs 2 Biomass).</p>
+      </section>
+
+      <section class="rule-section">
+        <h2>Mutation Cards</h2>
+        <p>A shared deck of 60 randomized mutation cards sits at the center of the game. Cards span 6 categories:</p>
+        <div class="category-pills">
+          <span class="cat-pill" style="background:#2E5C8A">Substrate</span>
+          <span class="cat-pill" style="background:#A06B1F">Climate</span>
+          <span class="cat-pill" style="background:#2E6B6B">Dispersal</span>
+          <span class="cat-pill" style="background:#3A6B3A">Vector</span>
+          <span class="cat-pill" style="background:#8B2E2E">Defense</span>
+          <span class="cat-pill" style="background:#5B3A6F">Special</span>
+        </div>
+        <p>Draw cards to build your strategy. Each species starts with 3 species-specific mutations already in hand.</p>
+      </section>
+
+      <section class="rule-section">
+        <h2>Spore Drift Pool</h2>
+        <p>When cards are discarded they enter the <strong>Spore Drift Pool</strong> — a shared, face-up discard pile. Either player can scavenge from it for 1 MP on their turn. Cards cycle out when the pool exceeds 15.</p>
+      </section>
+
+      <section class="rule-section">
+        <h2>Victory Paths</h2>
+        <ul class="rule-list">
+          <li><strong>Population Collapse</strong> — Infect and eliminate human populations.</li>
+          <li><strong>Control Network</strong> — Dominate human behavior through neurological manipulation.</li>
+          <li><strong>Biomass Empire</strong> — Hold territorial dominance for 4 consecutive rounds.</li>
+          <li><strong>Ecological Conquest</strong> — Eliminate rival fungal species through mycoparasitism.</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <div class="rules-footer">
+    <button class="btn btn-large" id="btn-to-lobby">Begin — Enter the Mycelium</button>
+    <p class="small center" style="margin-top:0.5rem;">2 Players · 90–120 min · Ages 14+</p>
+  </div>
+</div>
+
+<!-- ══ SCREEN: LOBBY ══════════════════════════════════════════════════ -->
+<div id="screen-lobby" class="screen">
+  <div class="logo">MYCELIUM</div>
+  <div class="logo-sub">World Domination — v0.1 Proof of Concept</div>
+
+  <div class="card center-card">
+    <div class="card-title">Start a Game</div>
+    <p class="small" style="margin-bottom:1.25rem;">Create a room and share the code, or join a friend's room.</p>
+    <div class="btn-row">
+      <button class="btn" id="btn-create">Create Room</button>
+      <button class="btn btn-ghost" id="btn-show-join">Join Room</button>
+    </div>
+    <div id="join-form" style="display:none; margin-top:1.25rem;">
+      <div class="input-group">
+        <input id="join-code-input" type="text" maxlength="4" placeholder="XXXX" autocomplete="off"/>
+        <button class="btn" id="btn-join">Join</button>
+      </div>
+    </div>
+    <div class="error-msg" id="lobby-error"></div>
+  </div>
+</div>
+
+<!-- ══ SCREEN: WAITING ════════════════════════════════════════════════ -->
+<div id="screen-waiting" class="screen">
+  <div class="logo">MYCELIUM</div>
+  <div class="room-code-label">Your Room Code</div>
+  <div class="room-code" id="display-code">----</div>
+  <p class="small center">Share this with your opponent, then wait.</p>
+  <div class="status pulse">Waiting for opponent to join…</div>
+</div>
+
+<!-- ══ SCREEN: SPECIES SELECT ════════════════════════════════════════ -->
+<div id="screen-select" class="screen">
+  <div class="logo" style="font-size:2rem;">Choose Your Species</div>
+  <div class="status" id="select-status">Select the fungal species you will command.</div>
+  <div class="status" id="opponent-select-status" style="color:#8b6914; min-height:1.2em;"></div>
+  <div class="species-grid" id="species-grid"></div>
+  <div class="error-msg" id="select-error"></div>
+</div>
+
+<!-- ══ SCREEN: GAME ═══════════════════════════════════════════════════ -->
+<div id="screen-game" class="screen screen-game">
+
+  <!-- Top bar -->
+  <div class="game-topbar">
+    <div class="logo-small">MYCELIUM</div>
+    <div class="topbar-center">
+      <div class="turn-banner" id="turn-banner">Loading…</div>
+    </div>
+    <div class="topbar-right" style="display:flex;align-items:center;gap:0.5rem;">
+    <span class="small" id="round-label">Round 1</span>
+    <button class="btn btn-ghost btn-small" id="btn-rules-popup" title="Rules reference">?</button>
+  </div>
+  </div>
+
+  <!-- Main game area -->
+  <div class="game-main">
+
+    <!-- LEFT: Player panels -->
+    <div class="game-sidebar">
+      <!-- My panel -->
+      <div class="panel my-panel">
+        <div class="panel-label">YOU</div>
+        <div id="my-species-name" class="panel-species"></div>
+        <span id="my-species-cat" class="species-category-badge"></span>
+        <div class="resource-row">
+          <div class="res-box"><div class="res-lbl">Biomass</div><div class="res-val" id="my-biomass">—</div></div>
+          <div class="res-box"><div class="res-lbl">Spores</div><div class="res-val" id="my-spores">—</div></div>
+          <div class="res-box"><div class="res-lbl">MP</div><div class="res-val" id="my-mp">—</div></div>
+        </div>
+        <div class="owned-count small">Hexes: <span id="my-hex-count">1</span></div>
+      </div>
+
+      <div class="vs-line">VS</div>
+
+      <!-- Opponent panel -->
+      <div class="panel opp-panel">
+        <div class="panel-label">OPPONENT</div>
+        <div id="opp-species-name" class="panel-species"></div>
+        <span id="opp-species-cat" class="species-category-badge"></span>
+        <div class="resource-row">
+          <div class="res-box"><div class="res-lbl">Biomass</div><div class="res-val" id="opp-biomass">—</div></div>
+          <div class="res-box"><div class="res-lbl">Spores</div><div class="res-val" id="opp-spores">—</div></div>
+          <div class="res-box"><div class="res-lbl">MP</div><div class="res-val" id="opp-mp">—</div></div>
+        </div>
+        <div class="owned-count small">Hexes: <span id="opp-hex-count">1</span> · Hand: <span id="opp-hand-count">3</span></div>
+      </div>
+
+      <div style="margin-top:auto;">
+        <button class="btn btn-endturn" id="btn-end-turn" disabled>End Turn</button>
+        <div class="error-msg small" id="action-error" style="margin-top:0.4rem;"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Hex map -->
+    <div class="game-map-wrap">
+      <svg id="hex-map" class="hex-map"
+           viewBox="0 0 400 430" preserveAspectRatio="xMidYMid meet">
+        <!-- Rendered by JS -->
+      </svg>
+      <div id="hex-tooltip" class="hex-tooltip" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- BOTTOM: Cards area -->
+  <div class="game-cards-area">
+
+    <!-- Hand -->
+    <div class="cards-section hand-section">
+      <div class="cards-section-label">Your Hand <span id="hand-count" style="color:var(--muted)">(0)</span></div>
+      <div class="hand-scroll" id="player-hand">
+        <!-- Mutation cards rendered by JS -->
+      </div>
+    </div>
+
+    <!-- Deck + Pool -->
+    <div class="cards-section deck-section">
+      <div class="cards-section-label">Deck &amp; Spore Drift Pool</div>
+      <div class="deck-pool-row">
+
+        <!-- Draw pile -->
+        <div class="pile-wrap">
+          <div class="deck-pile" id="deck-pile">
+            <div class="deck-back"></div>
+            <div class="deck-back deck-back-2"></div>
+            <div class="deck-back deck-back-3"></div>
+          </div>
+          <div class="pile-count" id="deck-count">—</div>
+          <button class="btn btn-small" id="btn-draw" disabled>Draw <span class="cost-badge">2 MP</span></button>
+        </div>
+
+        <div class="pile-arrow">→</div>
+
+        <!-- Spore Drift Pool -->
+        <div class="pile-wrap">
+          <div class="drift-pile" id="drift-pile">
+            <div class="drift-empty-msg" id="drift-empty">Empty</div>
+          </div>
+          <div class="pile-count" id="drift-count">—</div>
+          <div class="small center" style="color:var(--muted); font-size:0.65rem; margin-top:0.25rem;">Spore Drift Pool</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ SCREEN: DISCONNECTED ══════════════════════════════════════════ -->
+<div id="screen-disconnected" class="screen">
+  <div class="logo" style="color:var(--danger);">CONNECTION LOST</div>
+  <p class="small center">Your opponent disconnected. The room has closed.</p>
+  <button class="btn btn-ghost" onclick="location.reload()">Return to Lobby</button>
+</div>
+
+<!-- ══ ENVIRONMENTAL EVENT MODAL ══════════════════════════════════ -->
+<div id="env-modal" class="modal-overlay" style="display:none;">
+  <div class="env-card-popup">
+    <div class="env-card-top">
+      <div class="env-cat-badge" id="env-cat">Disaster</div>
+      <div class="env-icon" id="env-icon">🌪️</div>
+    </div>
+    <div class="env-card-name" id="env-name">Environmental Event</div>
+    <div class="env-flavor" id="env-flavor">—</div>
+    <div class="env-effect-box">
+      <div class="env-effect-label">Effect</div>
+      <div class="env-effect-text" id="env-effect">—</div>
+    </div>
+    <div class="env-timer-wrap">
+      <div class="env-timer-bar" id="env-timer-bar"></div>
+    </div>
+    <button class="btn btn-small" id="btn-dismiss-env">Got it</button>
+  </div>
+</div>
+
+<!-- ══ RULES POPUP ════════════════════════════════════════════════ -->
+<div id="rules-modal" class="modal-overlay" style="display:none;">
+  <div class="rules-modal-box">
+    <div class="modal-header">
+      <span>Quick Rules Reference</span>
+      <button class="btn-close" id="btn-close-rules">✕</button>
+    </div>
+    <div class="rules-modal-body">
+      <div class="qr-section">
+        <h4>Actions each turn</h4>
+        <ul>
+          <li><strong>Expand (2 Biomass)</strong> — click a pulsing adjacent hex. Terrain may require a card type.</li>
+          <li><strong>Grow sub-hex (1 Spore)</strong> — click an empty dot inside a hex you own.</li>
+          <li><strong>Draw card (2 MP)</strong> — one draw per turn from your category deck.</li>
+          <li><strong>Discard</strong> — click any card in hand. Goes to the Spore Drift Pool.</li>
+          <li><strong>Scavenge (1 MP)</strong> — click the top card in the Drift Pool.</li>
+        </ul>
+      </div>
+      <div class="qr-section">
+        <h4>Income (end of each turn)</h4>
+        <p>+1 MP · +1 Biomass per hex · +1 Biomass per fully-grown hex (all 3 dots filled)</p>
+      </div>
+      <div class="qr-section">
+        <h4>Terrain requirements to expand</h4>
+        <table class="qr-table">
+          <tr><td>Alpine</td><td>Climate card</td></tr>
+          <tr><td>Boreal</td><td>Climate or Substrate</td></tr>
+          <tr><td>Tropical</td><td>Dispersal or Substrate</td></tr>
+          <tr><td>Desert</td><td>Climate card</td></tr>
+          <tr><td>Urban</td><td>Substrate or Special</td></tr>
+          <tr><td>Coastal</td><td>Dispersal card</td></tr>
+          <tr><td>Temperate / Grassland</td><td><em>Always open</em></td></tr>
+        </table>
+      </div>
+      <div class="qr-section">
+        <h4>Deck types by species</h4>
+        <p><strong>Ecological Specialists</strong> — draw from Substrate · Special · Vector</p>
+        <p><strong>Environmental Generalists</strong> — draw from Climate · Dispersal · Defense</p>
+      </div>
+      <div class="qr-section">
+        <h4>Victory paths</h4>
+        <ul>
+          <li>Population Collapse — infect &amp; eliminate humans</li>
+          <li>Control Network — dominate human behavior</li>
+          <li>Biomass Empire — hold territorial dominance 4 rounds</li>
+          <li>Ecological Conquest — eliminate rival species</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CARD DETAIL POPUP ══════════════════════════════════════════ -->
+<div id="card-detail-popup" class="card-detail-popup" style="display:none;">
+  <div class="cdp-name" id="cdp-name"></div>
+  <div class="cdp-cat-row">
+    <span class="cdp-cat" id="cdp-cat"></span>
+    <span class="cdp-power" id="cdp-power"></span>
+  </div>
+  <div class="cdp-effect" id="cdp-effect"></div>
+  <div class="cdp-hint" id="cdp-hint"></div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="cards.js"></script>
+<script src="env_cards.js"></script>
+<script src="species.js"></script>
+<script src="map.js"></script>
+<script src="client.js"></script>
+</body>
+</html>
